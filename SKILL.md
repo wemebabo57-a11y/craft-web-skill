@@ -1,7 +1,7 @@
 ---
 name: craft-web
 description: |
-  Build, fix, or refine web frontend work the way a real maintainer would — read the actual request, decide the shape, ship code that looks like it was meant to live there for years. Triggers on "build a website", "fix this UI bug", "优化界面", "AI 味太重", "加点动效", "改改样式", "帮我做个登录页", "数据库连不上", or any web frontend ask touching HTML/CSS/JS, React/Vue/Svelte/Next.js, Tailwind. Not for pure algorithm questions, backend-only scripts, CLI tools, research/writing tasks, or native desktop/mobile.
+  Build, fix, or refine web frontend work the way a real maintainer would — read the actual request, decide the shape, ship code that looks like it was meant to live there for years, not like an AI template or a 2003 homepage. Triggers on "build a website", "fix this UI bug", "优化界面", "AI 味太重", "太像 AI 生成", "链接老气", "00 年代风格", "加点动效", "改改样式", "帮我做个登录页", "数据库连不上", or any web frontend ask touching HTML/CSS/JS, React/Vue/Svelte/Next.js, Tailwind. Not for pure algorithm questions, backend-only scripts, CLI tools, research/writing tasks, or native desktop/mobile.
 ---
 
 # Craft Web
@@ -14,6 +14,8 @@ A set of constraints, not a template. The skill tells the model what *not* to do
 ## What this is
 
 The most common AI failure on web work is **template matching**: see "SaaS landing" → auto-spawn hero / logo-bar / features / workflow / pricing / CTA / footer. This skill actively forbids that. Read the request, decide the structure, then write.
+
+The second-most-common failure is **default link styling**: ship a page that's visually modern but every `<a>` still renders as `#0000EE` + underline + visited-purple — instant 2003 energy. The third is **AI copy fingerprint**: even when the layout is fine, the words give it away ("seamlessly leverage cutting-edge AI to transform your workflow"). Both are addressed below — Link & text treatment kills the 2003 look, Anti-AI tells kills the generated-copy look.
 
 Three layers of constraint:
 - **Visual** — how it looks (the deepest layer, most likely to slip)
@@ -131,6 +133,20 @@ One set, one stroke width, throughout:
 
 Never mix. Never reach for emoji to substitute an icon.
 
+### Link & text treatment
+
+Links are typography, not afterthought. Default browser link styling (`#0000EE` + underline + visited purple) is the strongest "2000s homepage" tell — and the easiest to fix.
+
+- **No default link colors**. Never `color: blue` + `text-decoration: underline` as baseline. Style links intentionally — usually ink color, or brand color with underline only on hover (or never).
+- **No "click here" / "learn more" / "read more"** as link text. The link text describes the destination: "View the API reference", "Linear's changelog", "PR #482".
+- **No inline link soup**. A paragraph with 4+ links is a footnote list or a sidebar, not prose.
+- **Footer links**: one row, max 6–8 entries, grouped by type. No multi-column link farm. If you need a sitemap, build a real `/sitemap` page.
+- **No `target="_blank"` on internal links**. External links get `rel="noopener noreferrer"`. Opening new tabs for your own routes breaks back-button expectations.
+- **Hover state**: subtle color shift or underline appear. Never the reverse-color flip that 90s tutorials taught.
+- **Breadcrumb**: only when hierarchy is genuinely 3+ levels deep. Use `/` or `›` separator, current page non-link.
+- **No "Last updated" stamps** on marketing pages. Docs / changelogs are the exception.
+- **Copyright**: one line, no "All rights reserved" (legally redundant since the 1989 Berne Convention implementation). `© Acme` or `© 2024 Acme` is enough.
+
 ### Components that signal "real"
 
 These are the markers a real maintainer uses; AI defaults miss them:
@@ -143,6 +159,93 @@ These are the markers a real maintainer uses; AI defaults miss them:
 - **Error states** with what went wrong + what to do, not a stack trace
 - **Keyboard shortcuts** shown in tooltips on hover (⌘K, etc.)
 
+### Layout anti-patterns
+
+Some layouts are AI-default; some are 2000s-default. Both read as generated. Avoid:
+
+- **No symmetric 3-column equal-width feature card grid**. If you must show 3 features, vary heights, mix in a quote, or use 2+1 / bento layout. Three equal cards with icon-on-top is *the* AI feature grid.
+- **No "Trusted by [LOGO] [LOGO] [LOGO]" logo bar**. If customers matter, pick 3 and write one sentence each about how they use it. Greyscale logo strips are 2015 SaaS-default.
+- **No animated stat counters** ("10,000+ users" with count-up). Show the number; real numbers don't need a performance.
+- **No pricing table with "Most Popular" badge on middle tier**. If you have 3 tiers, show 3 tiers. The badge is a manipulative pattern sophisticated users recognize.
+- **No "Why choose us" / "Our features" / "Get started today"** as section headings. Title sections by what they contain, not by their rhetorical role.
+- **No perfectly centered hero** (centered title + centered subhead + centered CTA pair). Asymmetric hero (text left + visual right, or text right + meta left) reads as designed.
+- **No FAQ accordion in marketing pages**. FAQs belong in `/help` or `/docs`. Common questions get answered inline.
+- **No "screenshot in a stylized browser frame" hero visual**. Show the real product UI or don't show one. Browser chrome decorations are filler.
+- **No CTA pair "Get started / Learn more"**. Pick one primary action. Secondary action can be a text link, not a button.
+
+---
+
+## Anti-AI tells
+
+The fastest AI tells — things that make a user say "this was generated" within 3 seconds:
+
+### In copy
+
+Buzzword stack — none of these survive editing:
+- seamless, leverage, robust, scalable, cutting-edge, innovative
+- empower, transform, unlock, revolutionize, next-generation, game-changing
+- "Boost productivity", "Streamline workflows", "Supercharge your X"
+
+Replace each with a concrete number, a specific scenario, or remove the sentence entirely.
+
+Other copy tells:
+- Perfectly parallel structure across sections (every section is "Verb + noun + benefit"). Vary sentence shape.
+- Rhyming or alliterative section titles ("Build Better Bonds").
+- Generic testimonial: "[Name], [Title] at [Company]" + 5 stars + "Game changer!". Replace with one real sentence + case-study link.
+- "Cutting-edge" applied to anything. Real products don't call themselves cutting-edge.
+- All-caps emphasis in body copy: "FREE", "NEW", "PRO". Use weight or color, not capitalization.
+- Exclamation marks in body copy. One per page max, if any. Marketing copy with three exclamation marks reads as infomercial.
+
+### In visuals
+
+- **Gradient text in hero headlines** (`bg-clip-text`). The single most identifiable AI visual pattern of 2023–2024.
+- **Purple-to-pink gradient backgrounds** (already in Visual Recipe — restating because it's the #1 tell).
+- **Floating abstract shapes**: blobs, blurred orbs, gradient circles behind text.
+- **Glassmorphism cards** (`backdrop-blur` + `bg-white/10`). Reads as 2021 Dribbble shot.
+- **3-up feature card grid** with icon in colored rounded square + title + 2-line description.
+- **Sparkle / particle / aurora animations** behind hero.
+- **Hero illustration** of abstract people / geometric shapes in flat-design style.
+- **Perfectly centered hero** with no asymmetry.
+- **Emoji as UI section markers** (🚀 ⚡ ✨ 🔒). Emoji belong in chat, not product UI.
+
+### In code
+
+- Generated placeholder names: `feature1` / `feature2` / `feature3`, `cardData` arrays with lorem copy.
+- Comments describing what the code does (`// Button click handler`) — already forbidden in Code section, also an AI tell.
+- Inline styles everywhere instead of a coherent class system.
+- `Lorem ipsum` anywhere. If copy isn't ready, write real copy or `[copy TBD: pricing details]`.
+- Inline `style={{}}` props scattered through JSX instead of classes.
+
+### Counter-patterns — what to do instead
+
+- **Concrete numbers**: "Average response: 142ms", "Handles 47 edge cases", "Deployed to 12 regions".
+- **Real attribution**: link to actual docs, real PRs, real blog posts — not "Learn more".
+- **Asymmetry**: hero text left, visual right; or one feature twice the height of its neighbors.
+- **Opinion**: "We picked Postgres because we needed transactions. If you don't, SQLite is fine." Generic copy can't fake this.
+- **Honest limitation**: "Doesn't work offline", "Slow on datasets > 1M rows". Stating a real tradeoff reads as human.
+- **Imperfection on purpose**: one element that breaks the grid, one section that's 3× the height of others, one CTA that's plain text instead of a button. Perfectly uniform pages read as generated.
+
+---
+
+## Anti-dated patterns
+
+The 2000s-style tells — patterns that read as "this codebase was last touched in 2008":
+
+- **No layout tables**. `<table>` is for tabular data only. Layout via flexbox / grid.
+- **No web-safe font defaults**: Arial, Verdana, Tahoma, Times New Roman, Georgia, Comic Sans, Trebuchet MS. Use the type system in Visual Recipe.
+- **No `bgcolor`, `<font>`, `<center>`, `<marquee>`, `<blink>` tags**. (These still appear in generated code more often than you'd think.)
+- **No glossy Web 2.0 buttons**: gradient + box-shadow + border-radius combos mimicking iOS 6 / Bootstrap 2. Use flat or single-shadow buttons.
+- **No drop shadows everywhere**. One shadow scale (e.g., `0 1px 2px rgba(0,0,0,0.04)` for cards). Don't sprinkle `box-shadow: 0 0 10px rgba(0,0,0,0.5)` on every container.
+- **No `outline: none` without a custom focus ring**. Removing default focus without replacing it is 2005.
+- **No "Best viewed in 1024x768" / browser-support banners**. Modern responsive design handles this implicitly.
+- **No visitor counter, no "Last modified" stamp** on marketing pages.
+- **No `© Company. All rights reserved. | Privacy | Terms | Sitemap | RSS`** in a thin gray footer row. One line max, real design.
+- **No unstyled `<input type="submit">`**. Form controls get the same design system as everything else.
+- **No `text-align: center` on body content**. Center is for hero / feature highlights, not paragraphs.
+- **No rainbow gradient buttons**. Related to "no purple gradient" but applies to all CTAs.
+- **No `<hr>` decorative dividers** with default browser styling. If you need a divider, use `border-top` on a real element.
+- **No `<ul>` with default disc bullets in feature lists**. Either use custom markers, or restructure as definition list / cards.
+
 ---
 
 ## Voice
@@ -153,6 +256,19 @@ These are the markers a real maintainer uses; AI defaults miss them:
 - No user-blaming on bug reports: default to the bug existing. "你是不是清缓存了？" is not a first move.
 - Lead with the conclusion, then the reason. One sentence beats five balanced ones.
 - Match verbosity to the task. A one-line bug fix doesn't get a five-bullet explanation. A full landing rewrite does.
+
+### Copy anti-patterns (AI tells in user-facing text)
+
+These apply to copy *in the UI itself*, not just to how you talk to the user:
+
+- No marketing buzzwords: "seamless", "leverage", "robust", "scalable", "cutting-edge", "innovative", "empower", "transform". These are the AI copy fingerprint — replace with concrete specifics.
+- No abstract benefit claims: "Boost productivity" → "Cuts average task time from 4 min to 90 sec (n=47, internal test)".
+- Vary sentence shape: don't write 4 parallel "Verb + noun + benefit" sentences in a row. Mix length, structure, voice.
+- State limitations honestly: "Doesn't work offline", "Only tested on Chrome 110+". AI-generated copy never admits tradeoffs; real engineering copy does.
+- No all-caps emphasis in body copy. Use weight or color, not capitalization.
+- No exclamation marks in body copy. One per page max, if any.
+- No rhetorical questions as section openers ("Ever wished you could…?"). Direct statement beats rhetorical question.
+- No "In today's fast-paced world…" openers. Ever. The user already knows what world they live in.
 
 ---
 
@@ -165,6 +281,8 @@ These are the markers a real maintainer uses; AI defaults miss them:
 - **Three states for every data view**: loading / empty / error. All three rendered.
 - **Accessibility**: keyboard reachable, focus ring visible (see Visual Recipe), `aria-label` on icon-only buttons, semantic HTML (`<button>` not `<div onClick>`).
 - **No secret leakage**: no API keys in client bundles, no `.env` exposed, no `dangerouslySetInnerHTML` on user input.
+- **Links**: no `target="_blank"` on internal routes; external links get `rel="noopener noreferrer"`. No `color: blue` + `text-decoration: underline` as default — see Link & text treatment.
+- **No inline `style={{}}` soup** in JSX. Use class-based styling (CSS Modules / Tailwind / styled-components) — inline styles scattered through components read as AI-generated one-shots.
 
 ---
 
@@ -192,6 +310,11 @@ Every box must pass before declaring done. Most are obvious in-context; only one
 - [ ] Visual restraint: no emoji in UI copy; no glassmorphism; no purple gradient; recipe from Visual section followed?
 - [ ] Cleanup: no `console.log`, no commented-out code, no debug state?
 - [ ] Naming: reads human (`handleCheckout`, not `handleBtn1`)?
+- [ ] **Links**: no "click here" / "learn more"; no default blue underline; no `target="_blank"` on internal links; footer ≤ 6 entries; no "All rights reserved"?
+- [ ] **Anti-AI visual**: no gradient text in hero; no purple-pink gradient; no 3-up feature card grid with icon-in-square; no glassmorphism; no sparkle particles; no emoji as UI markers?
+- [ ] **Anti-AI copy**: no "seamless/leverage/robust/scalable/cutting-edge/empower/transform"; no abstract benefit claims; no perfectly parallel section structures; no exclamation marks in body; no rhetorical-question openers?
+- [ ] **Anti-dated**: no layout tables; no Arial/Times/Verdana/Comic Sans defaults; no glossy Web 2.0 buttons; no `box-shadow` on every container; no `<hr>` / default `<ul>` bullets in feature lists?
+- [ ] **Hero**: not perfectly centered; no "screenshot in browser frame" decoration; CTA is single primary action (no "Get started / Learn more" pair)?
 
 ---
 
@@ -234,6 +357,28 @@ Not Dribbble. Not "AI landing page inspiration" boards. Those are how AI default
 按 Visual Recipe 重排：cream paper `#FAFAF7`、Inter Tight 标题 56px / -0.03em tracking、Linear-style 紧凑导航、h2 段间距 96px、feature 用 2 列 grid 而不是 3 列等宽 card。组件列表见上方「components that signal real」。
 
 具体怎么改贴一下当前 HTML / 截图，我直接出 diff。
+
+### Input: "页面太像 AI 生成的，链接也老气"
+**Output** (apply Anti-AI tells + Link & text treatment):
+
+两个问题分开治。
+
+**AI 味来源**：
+- Hero 大标题用了 `bg-clip-text` 紫粉渐变 → 砍掉，单色 ink `#0A0A0A`
+- 三列等宽 feature card + 每个 card 顶部一个紫底圆角 icon 容器 → 改 2+1 bento 或左文右图
+- 文案 "Seamlessly leverage cutting-edge AI to transform your workflow" → 改具体场景：「平均响应 142ms，47 个边缘情况已覆盖」
+- 居中 hero + 居中副标题 + 居中 CTA pair → 左对齐 hero，CTA 只留主操作
+- 段落里 "✨ Smart" / "🚀 Fast" / "🔒 Secure" emoji 标签 → 换 Lucide 图标或纯文字
+
+**链接老气来源**：
+- 全站 `<a>` 用浏览器默认 `#0000EE` + 下划线 → 改 ink 色 + hover 时出现下划线
+- "Click here to learn more" → 改实际目标：「查看 API 文档」
+- Footer 一长串 `Privacy | Terms | Sitemap | RSS | About | Blog | Contact | Careers | Press` → 留 6 个，按类型分组
+- 内链 `target="_blank"` → 砍掉，只外链开新 tab
+- 版权 `© 2024 Acme Inc. All rights reserved.` → `© Acme`
+- 文案里 "Last updated: 2024-03-15" 在 marketing 页 → 砍掉，只在 docs/changelog 保留
+
+贴 HTML，我直接出 diff。
 
 ---
 
